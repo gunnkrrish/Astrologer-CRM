@@ -16,7 +16,14 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!name || !email || !password) {
+      alert("Please fill in all fields");
+      return;
+    }
+
     try {
+      console.log("Attempting registration with API URL:", import.meta.env.VITE_API_URL);
+      
       const res = await API.post("/auth/register", {
         name,
         email,
@@ -35,10 +42,9 @@ const Register = () => {
       navigate("/dashboard");
 
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        "Registration Failed"
-      );
+      console.error("Registration error:", error);
+      const errorMessage = error.response?.data?.message || error.message || "Registration Failed";
+      alert(errorMessage);
     }
   };
 

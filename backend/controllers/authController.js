@@ -17,6 +17,13 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Name, email, and password are required",
+      });
+    }
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -40,8 +47,9 @@ const registerUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (error) {
+    console.error("Registration error:", error);
     res.status(500).json({
-      message: error.message,
+      message: error.message || "Registration failed",
     });
   }
 };
