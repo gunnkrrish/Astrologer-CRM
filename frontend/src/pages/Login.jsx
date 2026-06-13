@@ -7,6 +7,7 @@ import loginBg from "../assets/image.png";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { setUser } = useContext(AuthContext);
 
@@ -14,6 +15,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     try {
       const res = await API.post("/auth/login", {
@@ -37,6 +40,8 @@ const Login = () => {
         error.response?.data?.message ||
         "Login Failed"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,9 +89,14 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded"
+            disabled={loading}
+            className={`w-full text-white p-3 rounded transition ${
+              loading 
+                ? "bg-gray-400 cursor-not-allowed" 
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
