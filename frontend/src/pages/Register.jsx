@@ -8,6 +8,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { setUser } = useContext(AuthContext);
 
@@ -20,6 +21,8 @@ const Register = () => {
       alert("Please fill in all fields");
       return;
     }
+
+    setLoading(true);
 
     try {
       console.log("Attempting registration with API URL:", import.meta.env.VITE_API_URL);
@@ -45,6 +48,8 @@ const Register = () => {
       console.error("Registration error:", error);
       const errorMessage = error.response?.data?.message || error.message || "Registration Failed";
       alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,9 +102,14 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
+            disabled={loading}
+            className={`w-full text-white p-3 rounded transition ${
+              loading 
+                ? "bg-gray-400 cursor-not-allowed" 
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
 
         </form>
